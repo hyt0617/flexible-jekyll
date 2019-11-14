@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Connect local cluster in vs code
-date: 2019-11-12 15:00:00 +0800
+date: 2019-11-13 15:00:00 +0800
 description: How to connect the local cluster in vs code # Add post description (optional)
 img: # Add image post (optional)
 fig-caption: # Add figcaption (optional)
