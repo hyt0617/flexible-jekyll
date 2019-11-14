@@ -11,12 +11,12 @@ site-twitter: #if your site has a twitter account, enter it here
 # Author Settings
 author: HanYi Tsai # add your name
 author-img: # add your photo
-about-author:  # add description
+about-author:  I thought, I built, I debugged. Also a fans of RedSox. # add description
 social-twitter: # add your Twitter handle
 social-facebook: # add your Facebook handle
 social-github: hyt0617 # add your Github handle
-social-linkedin: # add your Linkedin handle
-social-email: # add your Email address
+social-linkedin: https://www.linkedin.com/in/han-yi-tsai-4325b935/ # add your Linkedin handle
+social-email: hyt720617@gmail.com # add your Email address
 
 # Disqus
 discus-identifier: https-hyt0617-github-io-notes # add your discus identifier
