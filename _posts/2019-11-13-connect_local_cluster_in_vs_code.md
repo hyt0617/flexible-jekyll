@@ -1,23 +1,33 @@
-## Description
+---
+layout: post
+title: Draft development with local kubuernetes cluster
+date: 2019-11-13 17:00:00 +0800
+description: Use draft to publish app image to local secure registry and deploy app to local k8s cluster in vs code. # Add post description (optional)
+img: # Add image post (optional)
+fig-caption: # Add figcaption (optional)
+tags: [Draft, VSCode, k8s, kubernetes]
+---
 
-Connect to the local k8s cluster in vs code
+In vs code, you could choose to link the public k8s cluster or minikube, but I wonder if it could connect to my local k8s cluster? Here is my experimental 
 
 ## Prerequsites
 
-* k8s cluster
+* local k8s cluster
 
-* vs kubernetes extension
+* VS code kubernetes extension
 
 
-## Steps
+## Create our private user in k8s
 
-* Create client key
+Here we'll use a **dev** user to operate the **development** namespace on our local k8s cluster.
+
+Create client key
 
 ```
 openssl genrsa -out client.key 4096
 ```
 
-* Prepare conf file to generate CSR
+Prepare conf file to generate CSR
 
 ```
 [ req ]
@@ -26,8 +36,8 @@ prompt = no
 default_md = sha256
 distinguished_name = dn
 [ dn ]
-CN = development => replace the common name you want
-O = development => replace the organize name you want
+CN = development
+O = development
 [ v3_ext ]
 authorityKeyIdentifier=keyid,issuer:always
 basicConstraints=CA:FALSE
@@ -35,13 +45,15 @@ keyUsage=keyEncipherment,dataEncipherment
 extendedKeyUsage=serverAuth,clientAuth
 ```
 
-* Generate CSR
+Generate CSR
 
 ```
 openssl req -config ./csr.cnf -new -key client.key -nodes -out 
 ```
 
-* Create csr.yaml for kubectl
+Register dev user to k8s cluster.
+
+csr.yaml
 
 ```
 apiVersion: certificates.k8s.io/v1beta1
@@ -59,32 +71,32 @@ spec:
   - client auth
 ```
 
-* Apply csr.yaml
+Apply it
 
 ```
 export BASE64_CSR=$(cat ./client.csr | base64 | tr -d '\n')
 cat csr.yaml | envsubst | kubectl apply -f -
 ```
 
-* Check csr in kubectl, the mysrc condition should be **Pending**
+Check csr in kubectl, the mysrc condition should be **Pending**
 
 ```
 kubectl get csr
 ```
 
-* Approve it
+Approve it
 
 ```
 kubectl certificate approve mycsr
 ```
 
-* Create a namespace, for example: development
+Create development namespace
 
 ```
 kubectl create ns development
 ```
 
-* Setting up RBAC role/cluster-role
+Setting up RBAC role/cluster-role, cluter-role for cluster operation
 
 ```
 kind: Role
@@ -120,7 +132,7 @@ rules:
 kubectl apply -f /path/file.yaml
 ```
 
-* Setting up role/cluster-role binding
+Setting up role/cluster-role binding
 
 ```
 kind: RoleBinding
@@ -158,13 +170,13 @@ roleRef:
 kubectl apply -f /path/file
 ```
 
-* View kube config on cluster
+Now, we have to connect to the cluster on vs code, first we have to view kube config on cluster, there's some settings you need to generate the kubeconfig later, like certificate-authority-data/context cluster etc.
 
 ```
 kubectl config view --raw -o json
 ```
 
-* Add kube config in vs code, replace all the necessary fields in previous step
+Add kube config in vs code, replace all the necessary fields in previous step
 
 ```
 apiVersion: v1
@@ -188,11 +200,16 @@ current-context: dev-kubernetes-admin@kubernetes
 
 ```
 
-* Apply config
+Apply kubeconfig to your local kubectl
 
 ```
 export KUBECONFIG=$KUBECONFIG:$HOME/.kube/config:$PWD/config
 ```
+
+And you'll see the local cluster in your vs code kubernetes extension.
+
+![connected](https://hyt0617.github.io/notes/assets/img/connected-cluster.png)
+
 
 ## Reference
 
