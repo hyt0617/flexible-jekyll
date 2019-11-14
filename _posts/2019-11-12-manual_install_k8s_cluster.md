@@ -1,6 +1,14 @@
-## Description
+---
+layout: post
+title: Manuall install k8s cluster
+date: 2019-11-12 12:00:00 +0800
+description: Setting up local k8s cluster # Add post description (optional)
+img: # Add image post (optional)
+fig-caption: # Add figcaption (optional)
+tags: [k8s, kubernetes]
+---
 
-Install k8s cluster
+It's time to experience the k8s cluster, since we already operated the minikube.
 
 ## Prerequisites
 
@@ -12,15 +20,20 @@ Install k8s cluster
 
 * Docker CE 19.03.4
 
-## Steps
 
-1. Disable all swap
+Next steps all perform on the master node
+
+## Disable all swap
+
+We use virtual machine to build up the k8s cluster here, at first we have to disable all swap.
 
 ```
 swapoff -a
 ```
 
-2. Change docker cgroup driver
+## Change docker cgroup driver
+
+It's suggestion to change default docker cgroupdriver from cgroup to systemd
 
 ```
 cat > /etc/docker/daemon.json <<EOF
@@ -38,13 +51,17 @@ systemctl restart docker
 systemctl status docker
 ```
 
-3. Initialize cluster, you can change the network cidr in others netmask
+## Initialize cluster
+
+You can change the network cidr which you want
 
 ```
 kubeadm init --pod-network-cidr=10.244.0.0/16
 ```
 
-4. Copy kube config
+## Copy kube config
+
+Copy default kubeconfig from /etc/kubernetes to $HOME/.kub
 
 ```
 mkdir -p $HOME/.kub
@@ -52,13 +69,16 @@ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 ```
 
-5. Apply flannel network
+## Apply flannel network
 
 ```
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 ```
 
-6. Join cluster (slave node), according the token which generated after kubeadm init
+## Join cluster on slave node
+
+Replace the token/hash which generated after kubeadm init
+
 ```
 kubeadm join 10.60.6.216:6443 --token q92xqc.s7r98tmschj6i08i     --discovery-token-ca-cert-hash sha256:2a55b833acf65ce42ad64bf3320ff8716cf7d9d3515b0f6d4e2672a975fc413d
 ```

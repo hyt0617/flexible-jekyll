@@ -1,11 +1,11 @@
 ---
 layout: post
-title: Draft development with local kubuernetes cluster
-date: 2019-11-13 17:00:00 +0800
-description: Use draft to publish app image to local secure registry and deploy app to local k8s cluster in vs code. # Add post description (optional)
+title: Connect local cluster in vs code
+date: 2019-11-12 15:00:00 +0800
+description: How to connect the local cluster in vs code # Add post description (optional)
 img: # Add image post (optional)
 fig-caption: # Add figcaption (optional)
-tags: [Draft, VSCode, k8s, kubernetes]
+tags: [VSCode, k8s, kubernetes]
 ---
 
 In vs code, you could choose to link the public k8s cluster or minikube, but I wonder if it could connect to my local k8s cluster? Here is my experimental 
