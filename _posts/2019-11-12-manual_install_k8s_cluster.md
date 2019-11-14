@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Manuall install k8s cluster
+title: Manual install k8s cluster
 date: 2019-11-12 12:00:00 +0800
 description: Setting up local k8s cluster # Add post description (optional)
 img: # Add image post (optional)
