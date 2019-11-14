@@ -45,7 +45,9 @@ example-k8s-app
     └───charts
 ```
 
-This folder struct is slightly different with draft default struct, and I prefer to use the [golang's project layout](https://github.com/golang-standards/project-layout), I'll show how to adjust it to the standard's layout. And Create the deployment folder first,
+This folder struct is slightly different with draft default struct, and I prefer to use the [golang's project layout](https://github.com/golang-standards/project-layout), I'll show how to adjust it to the standard's layout. 
+
+Create the deployment folder first,
 
 ```
 mkdir deployment
@@ -57,7 +59,9 @@ Create draft files in the deployment folder
 draft create deployment
 ```
 
-You can find draft.toml under the deployment folder, let's move it to the project root. And change the configuration of docker file and add **image-build-args** the make sure the docker could build image successfully.
+You can find draft.toml under the deployment folder, let's move it to the project root.
+
+Change the configuration of docker file and add **image-build-args** the make sure the docker could build image successfully.
 
 ```
 [environments]
@@ -94,7 +98,9 @@ func main() {
 }
 ```
 
-You could move the dockerfile under the deployment to the build/folder or create your dockerfile in build folder. Here we use multi-stage to simplify our docker image size.
+You could move the dockerfile under the deployment to the build/folder or create your dockerfile in build folder.
+
+Here we use multi-stage to simplify our docker image size.
 
 ```
 FROM golang:1.12-alpine AS go-builder
@@ -117,7 +123,9 @@ EXPOSE 8080
 CMD ["/app/app"]
 ```
 
-Ok, I assume you have installed minibuke. Let's start the minikube.
+Ok, I assume you have installed minibuke.
+
+Let's start the minikube.
 
 ```
     minikube start
