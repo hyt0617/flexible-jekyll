@@ -45,7 +45,7 @@ example-k8s-app
     └───charts
 ```
 
-This folder struct is slightly different with draft default struct, and I prefer to use the [golang's project layout](https://github.com/golang-standards/project-layout), I'll show how to ajust it to the standard's layout. And Create the deployment folder first,
+This folder struct is slightly different with draft default struct, and I prefer to use the [golang's project layout](https://github.com/golang-standards/project-layout), I'll show how to adjust it to the standard's layout. And Create the deployment folder first,
 
 ```
 mkdir deployment
