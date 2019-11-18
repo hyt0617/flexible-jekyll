@@ -49,13 +49,13 @@ This folder struct is slightly different with draft default struct, and I prefer
 
 Create the deployment folder first,
 
-```
+```sh
 mkdir deployment
 ```
 
 Create draft files in the deployment folder
 
-```
+```sh
 draft create deployment
 ```
 
@@ -63,7 +63,7 @@ You can find draft.toml under the deployment folder, let's move it to the projec
 
 Change the configuration of docker file and add **image-build-args** the make sure the docker could build image successfully.
 
-```
+```toml
 [environments]
   [environments.development]
     name = "example-k8s-app"
@@ -102,7 +102,7 @@ You could move the dockerfile under the deployment to the build/folder or create
 
 Here we use multi-stage to simplify our docker image size.
 
-```
+```docker
 FROM golang:1.12-alpine AS go-builder
 LABEL stage=build
 
@@ -127,19 +127,19 @@ Ok, I assume you have installed minibuke.
 
 Let's start the minikube.
 
-```
+```sh
     minikube start
 ``` 
 
 Next, we have to initialize the helm, because the kubectl is v1.16, it's suggest to add `--upgarde` argument when you initialize the helm.
 
-```
+```sh
     helm init --upgrade
 ```
 
 Configure Draft to build images directly using Minikube's Docker daemon
 
-```
+```sh
 eval $(minikube docker-env)
 ```
 
@@ -147,7 +147,7 @@ Change apiVersion in **deployment/charts/example k8s-app/templates/deployment.ya
 
 Add below yaml under spec in **deployment/charts/example/k8s-app/templates/deployment.yaml**, we have to add this section in kubectl v1.16
 
-```
+```yaml
 selector:
    matchLabels:
      draft: {{ default "draft-app" .Values.draft }}
@@ -156,7 +156,7 @@ selector:
 
 Ok, we can sail our first k8s app to the minikube!
 
-```
+```sh
    draft up
 ```
 

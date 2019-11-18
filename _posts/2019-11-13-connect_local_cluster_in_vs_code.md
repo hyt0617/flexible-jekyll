@@ -23,7 +23,7 @@ Here we'll use a **dev** user to operate the **development** namespace on our lo
 
 Create client key
 
-```
+```sh
 openssl genrsa -out client.key 4096
 ```
 
@@ -47,7 +47,7 @@ extendedKeyUsage=serverAuth,clientAuth
 
 Generate CSR
 
-```
+```sh
 openssl req -config ./csr.cnf -new -key client.key -nodes -out 
 ```
 
@@ -55,7 +55,7 @@ Register dev user to k8s cluster.
 
 csr.yaml
 
-```
+```yaml
 apiVersion: certificates.k8s.io/v1beta1
 kind: CertificateSigningRequest
 metadata:
@@ -73,32 +73,32 @@ spec:
 
 Apply it
 
-```
+```sh
 export BASE64_CSR=$(cat ./client.csr | base64 | tr -d '\n')
 cat csr.yaml | envsubst | kubectl apply -f -
 ```
 
 Check csr in kubectl, the mysrc condition should be **Pending**
 
-```
+```sh
 kubectl get csr
 ```
 
 Approve it
 
-```
+```sh
 kubectl certificate approve mycsr
 ```
 
 Create development namespace
 
-```
+```sh
 kubectl create ns development
 ```
 
 Setting up RBAC role/cluster-role, cluter-role for cluster operation
 
-```
+```yaml
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
@@ -134,7 +134,7 @@ kubectl apply -f /path/file.yaml
 
 Setting up role/cluster-role binding
 
-```
+```yaml
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
@@ -172,13 +172,13 @@ kubectl apply -f /path/file
 
 Now, we have to connect to the cluster on vs code, first we have to view kube config on cluster, there's some settings you need to generate the kubeconfig later, like certificate-authority-data/context cluster etc.
 
-```
+```sh
 kubectl config view --raw -o json
 ```
 
 Add kube config in vs code, replace all the necessary fields in previous step
 
-```
+```yaml
 apiVersion: v1
 kind: Config
 clusters:
@@ -202,7 +202,7 @@ current-context: dev-kubernetes-admin@kubernetes
 
 Apply kubeconfig to your local kubectl
 
-```
+```sh
 export KUBECONFIG=$KUBECONFIG:$HOME/.kube/config:$PWD/config
 ```
 

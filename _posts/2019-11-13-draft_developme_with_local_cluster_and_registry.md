@@ -51,7 +51,7 @@ IP.1 = 10.60.6.216
 
 Then, use openssl to generate the crt & key
 
-```
+```sh
 openssl req -x509 -new -nodes -sha256 -days 3650 -newkey rsa:2048 -keyout server.key -out server.crt -config ssl.conf
 ```
 
@@ -59,7 +59,7 @@ openssl req -x509 -new -nodes -sha256 -days 3650 -newkey rsa:2048 -keyout server
 
 Because I don't want to use public docker registry, so I decide to setup my private docker registry for my k8s cluster. Please do this step on the master node.
 
-```
+```sh
 docker run -d --restart=always --name registry -v $PWD/certs:/certs -e REGISTRY_HTTP_ADDR=0.0.0.0:443 -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/server.crt -e REGISTRY_HTTP_TLS_KEY=/certs/server.key -p 443:443 registry:2
 ```
 
@@ -68,7 +68,7 @@ docker run -d --restart=always --name registry -v $PWD/certs:/certs -e REGISTRY_
 We have to let docker to login the private registry we setup,
 Perform this step on both master/slave k8s node. You can enter the username/password you'd like, please remeber the username you login, we'll use it for set secret in k8s.
 
-```
+```sh
 mkdir -p /etc/docker/certs.d/10.60.6.216/
 cp server.crt /etc/docker/certs.d/10.60.6.216/
 docker login 10.60.6.216 -u {username} -p {password}
@@ -81,7 +81,7 @@ you should see **Login Succeeded** on command line
 
 If your docker login successfully, then we have to create secret for it in k8s.
 
-```
+```sh
 kubectl create secret docker-registry local-registry \
 --docker-server=10.60.6.216 \
 --docker-username={username} \
@@ -91,13 +91,13 @@ kubectl create secret docker-registry local-registry \
 
 Because my development environment on Mac, I have to let my docker desktop to recoginze my self-signed certification.
 
-```
+```sh
 sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain server.crt
 ```
 
 Restart Docker desktop in order to make the certification valid, after restarting completed. Use username/password you create before to login.
 
-```
+```sh
 docker login 10.60.6.216 -u {username} -p {password}
 ```
 
@@ -105,7 +105,7 @@ docker login 10.60.6.216 -u {username} -p {password}
 
 By default, draft will push images to docker.io, so we have add our private registry to make sure draft will push the image to it.
 
-```
+```toml
 [environments]
   [environments.development]
     name = "example-k8s-app"
@@ -118,7 +118,7 @@ By default, draft will push images to docker.io, so we have add our private regi
 
 It's time to deploy our application to the local k8s cluster.
 
-```
+```sh
 draft up
 ```
 

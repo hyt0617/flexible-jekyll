@@ -27,7 +27,7 @@ Next steps all perform on the master node
 
 We use virtual machine to build up the k8s cluster here, at first we have to disable all swap.
 
-```
+```sh
 swapoff -a
 ```
 
@@ -35,7 +35,7 @@ swapoff -a
 
 It's suggestion to change default docker cgroupdriver from cgroup to systemd
 
-```
+```sh
 cat > /etc/docker/daemon.json <<EOF
 {
   "exec-opts": ["native.cgroupdriver=systemd"],
@@ -55,7 +55,7 @@ systemctl status docker
 
 You can change the network cidr which you want
 
-```
+```sh
 kubeadm init --pod-network-cidr=10.244.0.0/16
 ```
 
@@ -63,7 +63,7 @@ kubeadm init --pod-network-cidr=10.244.0.0/16
 
 Copy default kubeconfig from /etc/kubernetes to $HOME/.kub
 
-```
+```sh
 mkdir -p $HOME/.kub
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
@@ -71,7 +71,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 ## Apply flannel network
 
-```
+```sh
 kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 ```
 
@@ -79,6 +79,6 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documen
 
 Replace the token/hash which generated after kubeadm init
 
-```
+```sh
 kubeadm join 10.60.6.216:6443 --token q92xqc.s7r98tmschj6i08i     --discovery-token-ca-cert-hash sha256:2a55b833acf65ce42ad64bf3320ff8716cf7d9d3515b0f6d4e2672a975fc413d
 ```
