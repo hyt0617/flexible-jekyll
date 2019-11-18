@@ -69,4 +69,37 @@ profiles:
 
 ## Time to skaffold
 
-Execute the `skaffold dev` from where the skaffold.yaml is. 
+Execute the `skaffold dev` from where the skaffold.yaml is.
+
+In our case, we have local registry, so you have to tell skaffold where to push image
+
+```sh
+skaffold dev --default-repo 10.60.6.216 --profile cluster
+```
+
+You can use `kubectl get pods --all-namespaces` to check if the application if successfully deployed.
+
+## Make port forward to local
+
+Above steps perform how to deploy app to k8s cluster by skaffold, but in actual developement, we often use port forward to directly access our app on local machine, and skaffold also support this function.
+
+Add portForward section in your skaffold.yaml
+
+```yaml
+profiles:
+    ....
+    portForward:
+    - resourceType: pod
+      resourceName: gettting-started
+      namespace: development
+      port: 8080
+      localPort: 9000
+```
+
+Now, we expose the pod 8080 port to local 9000
+
+```sh
+skaffold dev --default-repo 10.60.6.216 --profile cluster --port-forward
+```
+
+We can access our web service on local port 9000
